@@ -21,7 +21,6 @@ app.config.from_pyfile('local_settings.py')
 redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 redis = redis.from_url(redis_url)
 
-
 numbers = []
 restList = []
 
@@ -43,7 +42,6 @@ def startup():
         redis.set('restList', json_data)
     else:
         restList = json.loads(redis_dat)
-        print(restList)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
