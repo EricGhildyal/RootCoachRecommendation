@@ -35,14 +35,15 @@ def startup():
         numbers_json = redis.get('nums')
         numbers = json.loads(numbers_json)
     # attempt to pull from redis
-    if redis_dat = redis.get('restList') is None:
+    redis_dat = redis.get('restList')
+    if redis_dat is None:
         data = json.load(open(restListFile))
         restList = data["list"]
         json_data = json.dumps(restList)
         redis.set('restList', json_data)
     else:
         restList = json.loads(redis_dat)
-        pritn(restList)
+        print(restList)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
