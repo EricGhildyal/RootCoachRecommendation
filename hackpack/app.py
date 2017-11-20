@@ -23,8 +23,6 @@ numbers = []
 def startup():
     data = json.load(open(numFile))
     numbers = data["nums"]
-    print(data)
-    print(data["nums"])
     print(numbers)
 
 # Voice Request URL
@@ -61,11 +59,21 @@ def smsPost():
     num = request.form['From']
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
-        numbers.append(num)
+        appendNumber(num)
         print(numbers)
     else:
         response.sms('Here is your healthy option today: ')
     return str(response)
+
+# write new number out to nums.json file
+def appendNumber(num):
+    numbers.append(num)
+    newNums = {}
+    newNums["nums"] = numbers
+    json_data = json.dumps(newNums)
+    with open(numFile, 'w') as outfile:
+        json.dump(json_data, outfile)
+    print("wrote to file!")
 
 
 # Twilio Client demo template
