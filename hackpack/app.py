@@ -18,7 +18,7 @@ numbers = []
 @app.route('/voice', methods=['GET', 'POST'])
 def voice():
     response = twiml.Response()
-    response.say("Welcome to RootRec, we do not support voice at this time, sorry.")
+    response.say("Welcome to RootRec. We do not support voice at this time. Sorry.")
     return str(response)
 
 
@@ -34,22 +34,25 @@ def sms():
 def smsGet():
     response = twiml.Response()
     print(numbers)
-    response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
+    response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service!')
     return str(response)
 
 # SMS Request URL
 @app.route('/sms', methods=['POST'])
 def smsPost():
     response = twiml.Response()
-    body = request.form['Body']
+    body = request.form['Body'].lower()
     if body is None:
         body = ""
+        print("body none")
     num = request.form['From']
-    print(num)
-    print(numbers)
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         numbers.append(num)
+        print(numbers)
+    elif "stop" in body:
+        response.sms("You have been removed, sorry to see you go!")
+        numbers.remove(num)
         print(numbers)
     else:
         response.sms('Here is your healthy option today: ')
