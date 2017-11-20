@@ -20,7 +20,7 @@ redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 redis = redis.from_url(redis_url)
 
 
-SECRET_KEY = '2F34255D3EC24192CABC88752C88A2AED9825B9C2C49C7E013644E647596CC73'
+secret_key = '2F34255D3EC24192CABC88752C88A2AED9825B9C2C49C7E013644E647596CC73'
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
 
@@ -66,6 +66,7 @@ def smsGet():
 # SMS Request URL
 @app.route('/sms', methods=['POST'])
 def smsPost():
+    global secret_key
     global numbers
     global restList
     global numFile
@@ -83,7 +84,7 @@ def smsPost():
         numbers.append(num)
         json_data = json.dumps(numbers)
         redis.set("nums", json_data)
-    elif "yes" in body:
+    elif "yes" in body: # handle follow up response
         print("got yes!")
         if lastRecIndex == -1:
             response.sms("Sorry, something went wrong")
