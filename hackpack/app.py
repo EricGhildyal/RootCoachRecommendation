@@ -29,11 +29,12 @@ def startup():
     global numFile
     global restListFile
     data = json.load(open(numFile))
+    print(data)
     numbers = data["nums"]
     print(numbers)
     data1 = json.load(open(restListFile))
     restList = data1["list"]
-    print(restList)
+    # print(restList)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
@@ -62,14 +63,25 @@ def smsGet():
 def smsPost():
     global numbers
     global restList
+    global numFile
     response = twiml.Response()
     body = request.form['Body'].lower()
     num = request.form['From']
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
-        appendNumber(num)
+        print(numbers)
+        numbers.append(num)
+        newNums = {}
+        newNums["nums"] = numbers
+        print(newNums)
+        json_data = json.dumps(newNums)
+        with open(numFile, 'w') as outfile:
+            json.dump(json_data, outfile)
         print("nums after append & return")
         print(numbers)
+        print("raeding file:")
+        data = json.load(open(numFile))
+        print(data)
     else:
         rest = random.choice(restList)
         randNum = random.randrange(1, 3)
@@ -77,18 +89,6 @@ def smsPost():
         optPrice = "opt" + str(randNum) + "price"
         response.sms('Hello, here are some healthy options for lunch: you could go to "{}" and get "{}" for {}. Reply with "next" for another option, or "yes" to get the address.'.format(rest["name"], rest[opt], rest[optPrice]))
     return str(response)
-
-# write new number out to nums.json file
-def appendNumber(num):
-    global numbers
-    global numFile
-    numbers.append(num)
-    newNums = {}
-    newNums["nums"] = numbers
-    json_data = json.dumps(newNums)
-    with open(numFile, 'w') as outfile:
-        json.dump(json_data, outfile)
-
 
 # Twilio Client demo template
 @app.route('/client')
