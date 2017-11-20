@@ -19,6 +19,8 @@ app.config.from_pyfile('local_settings.py')
 redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 redis = redis.from_url(redis_url)
 
+
+SECRET_KEY = '2F34255D3EC24192CABC88752C88A2AED9825B9C2C49C7E013644E647596CC73'
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
 
