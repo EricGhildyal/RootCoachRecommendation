@@ -68,7 +68,8 @@ def smsPost():
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         appendNumber(num)
-        print("nums after append & return" + numbers)
+        print("nums after append & return")
+        print(numbers)
     else:
         rest = random.choice(restList)
         randNum = random.randrange(1, 3)
