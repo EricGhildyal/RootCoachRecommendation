@@ -12,22 +12,47 @@ from twilio.util import TwilioCapability
 app = Flask(__name__, static_url_path='/static')
 app.config.from_pyfile('local_settings.py')
 
+numbers = []
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
 def voice():
     response = twiml.Response()
-    response.say("Congratulations! You deployed the Twilio Hackpack "
-                 "for Heroku and Flask.")
+    response.say("Welcome to RootRec, we do not support voice at this time, sorry.")
     return str(response)
 
 
 # SMS Request URL
-@app.route('/sms', methods=['GET', 'POST'])
+@app.route('/sms1', methods=['GET'])
 def sms():
     response = twiml.Response()
-    response.sms("Congratulations! You deployed the Twilio Hackpack "
-                 "for Heroku and Flask.")
+    response.sms("Nothing here")
+    return str(response)
+
+# SMS Request URL
+@app.route('/sms', methods=['GET'])
+def smsGet():
+    response = twiml.Response()
+    print(numbers)
+    response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
+    return str(response)
+
+# SMS Request URL
+@app.route('/sms', methods=['POST'])
+def smsPost():
+    response = twiml.Response()
+    body = request.form['Body']
+    if body is None:
+        body = ""
+    num = request.form['From']
+    print(num)
+    print(numbers)
+    if num not in numbers:
+        response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
+        numbers.append(num)
+        print(numbers)
+    else:
+        response.sms('Here is your healthy option today: ')
     return str(response)
 
 
