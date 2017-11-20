@@ -15,18 +15,22 @@ from twilio.util import TwilioCapability
 app = Flask(__name__, static_url_path='/static')
 app.config.from_pyfile('local_settings.py')
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-numFile = os.path.join(PROJECT_ROOT, 'nums.json')
 numbers = []
-restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
 restList = []
 
 @app.before_first_request
 def startup():
+    global numbers
+    global restList
+    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+    numFile = os.path.join(PROJECT_ROOT, 'nums.json')
+    restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
     data = json.load(open(numFile))
     numbers = data["nums"]
     print(numbers)
+    data1 = json.load(open(restListFile))
+    restList = data1["list"]
+    print(restList)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
@@ -47,13 +51,14 @@ def sms():
 @app.route('/sms', methods=['GET'])
 def smsGet():
     response = twiml.Response()
-    print(numbers)
     response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service!')
     return str(response)
 
 # SMS Request URL
 @app.route('/sms', methods=['POST'])
 def smsPost():
+    global numbers
+    global restList
     response = twiml.Response()
     body = request.form['Body'].lower()
     if body is None:
@@ -65,8 +70,6 @@ def smsPost():
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         appendNumber(num)
     else:
-        data1 = json.load(open(restListFile))
-        restList = data1["list"]
         print(restList)
         rest = random.choice(restList)
         randNum = random.randrange(1, 3)
