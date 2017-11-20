@@ -19,5 +19,75 @@
 		"opt2price": "$12.95",
 		"opt3": "Chana Masala",
 		"opt3price": "$10.95"
+	},{
+		"name" : "Lulu's Noodles",
+		"addr" : "400 S Craig St, Pittsburgh, PA 15213",
+		"phone" : "(412) 687-7777",
+		"opt1" : "Pho Soup",
+		"op1price" : "$6.25",
+		"opt2" : "Spicy Basil",
+		"opt2price" : "$6.25",
+		"opt3": "Pad Thai",
+		"opt3price" : "$7.25"
+	},{
+		"name" : "Eat Unique",
+		"addr" : "305 S Craig St, Pittsburgh, PA 15213",
+		"phone" : "(412) 683-9993",
+		"opt1" : "Garden Chilli",
+		"op1price" : "$4.75",
+		"opt2" : "Pesto Chicken salad ",
+		"opt2price" : "$6.99",
+		"opt3": "Sonoma Wrap",
+		"opt3price" : "$6.59"
+	},{
+		"name" : "Union grill",
+		"addr" : "413 S Craig St, Pittsburgh, PA 15213",
+		"phone" : "(412) 681-8620",
+		"opt1" : "Simple Salmon Sandwich",
+		"op1price" : "$12.99",
+		"opt2" : "House Ground Turkey Burger",
+		"opt2price" : "$11.99",
+		"opt3": "New York Strip",
+		"opt3price" : "$22.99"
+	},{
+		"name" : "Tazza D'oro",
+		"addr" : "4902 Forbes Ave Gates Ctr F1 3, Pittsburgh, PA 15213",
+		"phone" : "(412) 362-3676",
+		"opt1" : "Cold Panini Turkey ",
+		"op1price" : "$7.50",
+		"opt2" : "Hot Panini Eggplant ",
+		"opt2price" : "$7.50",
+		"opt3": "Salad Of Field Greens",
+		"opt3price" : "$8.95"
+	},{
+		"name" : "Kevin's Deli",
+		"addr" : "101 N Dithridge St, Pittsburgh, PA 15213",
+		"phone" : "412-621-6368",
+		"opt1" : "Grilled Chicken Sandwich ",
+		"op1price" : "$5.50",
+		"opt2" : "Turkey Sandwich ",
+		"opt2price" : "$5.00",
+		"opt3": "Garden Burger",
+		"opt3price" : "$4.00"
+	},{
+		"name" : "Crepes Parisiennes",
+		"addr" : "207 S Craig St, Pittsburgh, PA 15213",
+		"phone" : "(412) 683-1912",
+		"opt1" : "Mixed vegetables and cheese crepes",
+		"op1price" : "$7",
+		"opt2" : "Tomato fresh mozzarella pesto Panini",
+		"opt2price" : "$7",
+		"opt3": "Salad Parisiennes",
+		"opt3price" : "$5.50"
+	},{
+		"name" : "Sushi Fuku",
+		"addr" : "417 S Craig St, Pittsburgh, PA 15213",
+		"phone" : "(412) 251-0541",
+		"opt1" : "Rainbow Roll",
+		"op1price" : "$11",
+		"opt2" : "Mt. Fuji Chicken Bowl  ",
+		"opt2price" : "$7.15",
+		"opt3": "Garden Roll",
+		"opt3price" : "$7.00"
 	}]
 }
