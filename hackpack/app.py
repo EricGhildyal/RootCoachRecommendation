@@ -32,14 +32,22 @@ def startup():
     global numbers
     global restList
     global restListFile
-    global redis
     if redis.get('nums') is not None:
         numbers_json = redis.get('nums')
         numbers = json.loads(numbers_json)
-        # print(numbers)
-    data = json.load(open(restListFile))
-    restList = data["list"]
-    # print(restList)
+    # attempt to pull from redis
+    if redis.get('restList') is None:
+        data = json.load(open(restListFile))
+        restList = data["list"]
+        json_data = json.dumps(restList)
+        redis.set('restList', json_data)
+        print("saved rest list")
+        print("printing...")
+        print(json.loads(redis.get('restList')))
+    else:
+        restList = json.loads(redis.get('restList'))
+        print("got rest list")
+        print(restList)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
@@ -68,8 +76,6 @@ def smsGet():
 def smsPost():
     global numbers
     global restList
-    global numFile
-    global redis
     # setup response
     response = twiml.Response()
     # pull basic data from every message
@@ -78,27 +84,24 @@ def smsPost():
     # cookie data
     lastRecIndex = session.get('lastrec', -1)
     if num not in numbers:
-        print("new num!")
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         numbers.append(num)
         json_data = json.dumps(numbers)
         redis.set("nums", json_data)
     elif "yes" in body: # handle follow up response
-        print("got yes!")
         if lastRecIndex == -1:
             response.sms("Sorry, something went wrong")
         else:
             rest = restList[lastRecIndex]
-            response.sms("Great choice! {} is at {} and you can call them at {}".format(rest["name"], rest["addr"], rest["phone"]))
+            response.sms("Great choice! {} is at {}, you can call them at {}".format(rest["name"], rest["addr"], rest["phone"]))
     else:
-        print("recommending...")
         rest = random.choice(restList)
         index = restList.index(rest)
         session['lastrec'] = index
         randNum = random.randrange(1, 3)
         opt = "opt" + str(randNum)
         optPrice = "opt" + str(randNum) + "price"
-        response.sms('Hello, here are some healthy options for lunch: you could go to "{}" and get "{}" for {}. Reply with "next" for another option, or "yes" to get the address.'.format(rest["name"], rest[opt], rest[optPrice]))
+        response.sms('Hello, here is a healthy option nearby: you could go to "{}" and get "{}" for {}. Reply with "next" for another option, or "yes" to get the address.'.format(rest["name"], rest[opt], rest[optPrice]))
     return str(response)
 
 # Twilio Client demo template
