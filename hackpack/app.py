@@ -4,6 +4,7 @@ from flask import Flask
 from flask import render_template
 from flask import url_for
 from flask import request
+from flask import session
 import random
 import json
 import os
@@ -33,9 +34,7 @@ def startup():
     if redis.get('nums') is not None:
         numbers_json = redis.get('nums')
         numbers = json.loads(numbers_json)
-        print(numbers)
-    else:
-        print("was none")
+        # print(numbers)
     data = json.load(open(restListFile))
     restList = data["list"]
     # print(restList)
@@ -69,9 +68,13 @@ def smsPost():
     global restList
     global numFile
     global redis
+    # setup response
     response = twiml.Response()
+    # pull basic data from every message
     body = request.form['Body'].lower()
     num = request.form['From']
+    # cookie data
+    lastRecIndex = session.get('lastrec', -1)
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         print(numbers)
@@ -79,12 +82,16 @@ def smsPost():
         print("Saving num")
         json_data = json.dumps(numbers)
         redis.set("nums", json_data)
-        print("testing read now!")
-        n_json = redis.get('nums')
-        n = json.loads(n_json)
-        print(n)
+    elif ["yes", "ys", "ye", "es"] in body:
+        if lastRecIndex == -1:
+            response.sms("Sorry, something went wrong")
+        else:
+            rest = restList[lastRecIndex]
+            response.sms("Great choice! {} is at {} and you can call them at {}".format(rest["name"], rest["addr"], rest["phone"]))
     else:
         rest = random.choice(restList)
+        index = restList.index(rest)
+        session['lastrec'] = index
         randNum = random.randrange(1, 3)
         opt = "opt" + str(randNum)
         optPrice = "opt" + str(randNum) + "price"
