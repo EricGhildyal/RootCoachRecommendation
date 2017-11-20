@@ -4,6 +4,7 @@ from flask import Flask
 from flask import render_template
 from flask import url_for
 from flask import request
+import json
 
 from twilio import twiml
 from twilio.util import TwilioCapability
@@ -12,7 +13,16 @@ from twilio.util import TwilioCapability
 app = Flask(__name__, static_url_path='/static')
 app.config.from_pyfile('local_settings.py')
 
+numFile = "nums.json"
 numbers = []
+
+@app.before_first_request
+def startup():
+    data = json.load(open(numFile))
+    numbers = data["nums"]
+    print(data)
+    print(data["nums"])
+    print(numbers)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
@@ -49,10 +59,6 @@ def smsPost():
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         numbers.append(num)
-        print(numbers)
-    elif "stop" in body:
-        response.sms("You have been removed, sorry to see you go!")
-        numbers.remove(num)
         print(numbers)
     else:
         response.sms('Here is your healthy option today: ')
