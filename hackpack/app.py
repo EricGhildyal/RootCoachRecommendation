@@ -76,19 +76,20 @@ def smsPost():
     # cookie data
     lastRecIndex = session.get('lastrec', -1)
     if num not in numbers:
+        print("new num!")
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
-        print(numbers)
         numbers.append(num)
-        print("Saving num")
         json_data = json.dumps(numbers)
         redis.set("nums", json_data)
-    elif ["yes", "ys", "ye", "es"] in body:
+    elif "yes" in body:
+        print("got yes!")
         if lastRecIndex == -1:
             response.sms("Sorry, something went wrong")
         else:
             rest = restList[lastRecIndex]
             response.sms("Great choice! {} is at {} and you can call them at {}".format(rest["name"], rest["addr"], rest["phone"]))
     else:
+        print("recommending...")
         rest = random.choice(restList)
         index = restList.index(rest)
         session['lastrec'] = index
