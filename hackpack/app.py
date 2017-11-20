@@ -5,6 +5,7 @@ from flask import render_template
 from flask import url_for
 from flask import request
 import json
+import os
 
 from twilio import twiml
 from twilio.util import TwilioCapability
@@ -13,7 +14,9 @@ from twilio.util import TwilioCapability
 app = Flask(__name__, static_url_path='/static')
 app.config.from_pyfile('local_settings.py')
 
-numFile = "nums.json"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+numFile = os.path.join(PROJECT_ROOT, 'nums.json')
 numbers = []
 
 @app.before_first_request
