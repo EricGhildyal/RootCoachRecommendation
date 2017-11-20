@@ -64,19 +64,17 @@ def smsPost():
     global restList
     response = twiml.Response()
     body = request.form['Body'].lower()
-    if body is None:
-        body = ""
-        print("body none")
     num = request.form['From']
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         appendNumber(num)
+        print("nums after append & return" + numbers)
     else:
         rest = random.choice(restList)
         randNum = random.randrange(1, 3)
         opt = "opt" + str(randNum)
         optPrice = "opt" + str(randNum) + "price"
-        response.sms('Hello, here are some healthy options for lunch: you could go to {} and get {} for {}. Reply with "next" for another option, or "yes" to get the address.'.format(rest["name"], rest[opt], rest[optPrice]))
+        response.sms('Hello, here are some healthy options for lunch: you could go to "{}" and get "{}" for {}. Reply with "next" for another option, or "yes" to get the address.'.format(rest["name"], rest[opt], rest[optPrice]))
     return str(response)
 
 # write new number out to nums.json file
