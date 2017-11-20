@@ -21,33 +21,28 @@ app.config.from_pyfile('local_settings.py')
 redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 redis = redis.from_url(redis_url)
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
 
 numbers = []
 restList = []
 
 @app.before_first_request
 def startup():
+    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+    restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
     global numbers
     global restList
-    global restListFile
     if redis.get('nums') is not None:
         numbers_json = redis.get('nums')
         numbers = json.loads(numbers_json)
     # attempt to pull from redis
-    if redis.get('restList') is None:
+    if redis_dat = redis.get('restList') is None:
         data = json.load(open(restListFile))
         restList = data["list"]
         json_data = json.dumps(restList)
         redis.set('restList', json_data)
-        print("saved rest list")
-        print("printing...")
-        print(json.loads(redis.get('restList')))
     else:
-        restList = json.loads(redis.get('restList'))
-        print("got rest list")
-        print(restList)
+        restList = json.loads(redis_dat)
+        pritn(restList)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
