@@ -1,0 +1,23 @@
+{
+	"list": [{
+		"name": "Bagel Factory",
+		"phone": "(412) 681-1101",
+		"addr": "420 S Craig St, Pittsburgh, PA 15213",
+		"opt1": "Pittsburg salad",
+		"opt1price": "$9.99",
+		"opt2": "Hot roasted veggie grilled sandwich",
+		"opt2price": "$6.99",
+		"opt3": "Breakfast Burrito",
+		"opt3price": "$5.99"
+	}, {
+		"name": "Yuva",
+		"phone": "(412) 681-5700",
+		"addr": "412 S Craig St, Pittsburgh, PA 15213",
+		"opt1": "Chicken Tandoori",
+		"opt1price": "$13.95",
+		"opt2": "Lamb Karahi",
+		"opt2price": "$12.95",
+		"opt3": "Chana Masala",
+		"opt3price": "$10.95"
+	}]
+}

@@ -4,6 +4,7 @@ from flask import Flask
 from flask import render_template
 from flask import url_for
 from flask import request
+import random
 import json
 import os
 
@@ -18,12 +19,17 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 numFile = os.path.join(PROJECT_ROOT, 'nums.json')
 numbers = []
+restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
+restList = []
 
 @app.before_first_request
 def startup():
     data = json.load(open(numFile))
     numbers = data["nums"]
     print(numbers)
+    data = json.load(open(restListFile))
+    restList = data["list"]
+    print(restList)
 
 # Voice Request URL
 @app.route('/voice', methods=['GET', 'POST'])
@@ -60,9 +66,16 @@ def smsPost():
     if num not in numbers:
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         appendNumber(num)
-        print(numbers)
     else:
-        response.sms('Here is your healthy option today: ')
+        rest = random.choice(restList)
+        randNum = random.randrange(1, 3)
+        opt = "opt" + randNum
+        optPrice = "opt" + randNum + "price"
+        print(rest)
+        print(randNum)
+        print(opt)
+        print(optPrice)
+        response.sms('Hello, here are some healthy options for lunch: you could go to {} and get {} for {}. Reply with "next" for another option, or "yes" to get the address.'.format(rest.name, rest.opt, rest.optPrice))
     return str(response)
 
 # write new number out to nums.json file
@@ -73,7 +86,6 @@ def appendNumber(num):
     json_data = json.dumps(newNums)
     with open(numFile, 'w') as outfile:
         json.dump(json_data, outfile)
-    print("wrote to file!")
 
 
 # Twilio Client demo template
