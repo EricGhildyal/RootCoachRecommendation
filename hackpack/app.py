@@ -15,6 +15,10 @@ from twilio.util import TwilioCapability
 app = Flask(__name__, static_url_path='/static')
 app.config.from_pyfile('local_settings.py')
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+numFile = os.path.join(PROJECT_ROOT, 'nums.json')
+restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
+
 numbers = []
 restList = []
 
@@ -22,9 +26,8 @@ restList = []
 def startup():
     global numbers
     global restList
-    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-    numFile = os.path.join(PROJECT_ROOT, 'nums.json')
-    restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
+    global numFile
+    global restListFile
     data = json.load(open(numFile))
     numbers = data["nums"]
     print(numbers)
@@ -84,6 +87,8 @@ def smsPost():
 
 # write new number out to nums.json file
 def appendNumber(num):
+    global numbers
+    global numFile
     numbers.append(num)
     newNums = {}
     newNums["nums"] = numbers
