@@ -7,6 +7,7 @@ from flask import request
 import random
 import json
 import os
+import redis
 
 from twilio import twiml
 from twilio.util import TwilioCapability
@@ -14,9 +15,10 @@ from twilio.util import TwilioCapability
 # Declare and configure application
 app = Flask(__name__, static_url_path='/static')
 app.config.from_pyfile('local_settings.py')
+redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+redis = redis.from_url(redis_url)
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-numFile = os.path.join(PROJECT_ROOT, 'nums.json')
 restListFile = os.path.join(PROJECT_ROOT, 'restaurants.json')
 
 numbers = []
@@ -26,14 +28,16 @@ restList = []
 def startup():
     global numbers
     global restList
-    global numFile
     global restListFile
-    data = json.load(open(numFile))
-    print(data)
-    numbers = data["nums"]
-    print(numbers)
-    data1 = json.load(open(restListFile))
-    restList = data1["list"]
+    global redis
+    if redis.get('nums') is not None:
+        numbers_json = redis.get('nums')
+        numbers = json.loads(numbers_json)
+        print(numbers)
+    else:
+        print("was none")
+    data = json.load(open(restListFile))
+    restList = data["list"]
     # print(restList)
 
 # Voice Request URL
@@ -64,6 +68,7 @@ def smsPost():
     global numbers
     global restList
     global numFile
+    global redis
     response = twiml.Response()
     body = request.form['Body'].lower()
     num = request.form['From']
@@ -71,17 +76,13 @@ def smsPost():
         response.sms('Welcome to RootRec! Your number has been added to the list. Reply with "Stop" at any time to be removed from this service')
         print(numbers)
         numbers.append(num)
-        newNums = {}
-        newNums["nums"] = numbers
-        print(newNums)
-        json_data = json.dumps(newNums)
-        with open(numFile, 'w') as outfile:
-            json.dump(json_data, outfile)
-        print("nums after append & return")
-        print(numbers)
-        print("raeding file:")
-        data = json.load(open(numFile))
-        print(data)
+        print("Saving num")
+        json_data = json.dumps(numbers)
+        redis.set("nums", json_data)
+        print("testing read now!")
+        n_json = redis.get('nums')
+        n = json.loads(n_json)
+        print(n)
     else:
         rest = random.choice(restList)
         randNum = random.randrange(1, 3)
